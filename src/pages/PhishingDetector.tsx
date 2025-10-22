@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 
-const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || "AIzaSyAniD4OF7MD0QyFLQ-Trq5C-ZlZ_RGqKCc";
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
 
 export default function PhishingDetector() {
@@ -16,6 +16,15 @@ export default function PhishingDetector() {
   const { toast } = useToast();
 
   const analyzeMessage = async () => {
+    if (!GEMINI_API_KEY) {
+      toast({
+        title: "API Key Missing",
+        description: "Please configure VITE_GEMINI_API_KEY in your environment variables.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setAnalyzing(true);
     setResult(null);
     setAiResponse("");
